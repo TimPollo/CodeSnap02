@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f9fc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CodeSnap">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="Kopiertes Foto einsetzen, sechsstelligen Bestätigungscode erkennen und mit einem Tipp kopieren.">
+  <title>CodeSnap – Bestätigungscodes erkennen</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js"></script>
+  <script defer src="./code-utils.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <main class="app" aria-label="CodeSnap">
+    <header class="head">
+      <img src="./icon-192.png" class="app-logo" width="54" height="54" alt="CodeSnap App-Icon">
+      <div class="identity">
+        <div class="eyebrow">SCREENSHOT → CODE</div>
+        <h1>CodeSnap <span class="version">2</span></h1>
+      </div>
+      <span class="privacy"><span class="dot"></span> Privat</span>
+    </header>
+
+    <section class="card result-card" aria-labelledby="codeTitle">
+      <div class="section-top"><h2 id="codeTitle">Erkannter Code</h2><button id="resetBtn" class="secondary-action" type="button">Zurücksetzen</button></div>
+      <div id="placeholder" class="placeholder" aria-live="polite"><span class="placeholder-symbol">#</span><span>Dein 6-stelliger Code erscheint hier.</span></div>
+      <div id="resultArea" hidden>
+        <div class="result-line">
+          <input id="codeInput" class="code-input" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Erkannter Bestätigungscode, korrigierbar">
+          <button id="copyBtn" class="copy-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Kopieren</span></button>
+        </div>
+        <p id="qualityMessage" class="quality-message" aria-live="polite"></p>
+      </div>
+      <div id="alternatives" class="alternatives" hidden><p>Andere mögliche Codes – bei Bedarf antippen:</p><div id="candidateButtons" class="candidate-buttons"></div></div>
+    </section>
+
+    <section class="card paste-card" aria-labelledby="pasteTitle">
+      <div class="section-top"><h2 id="pasteTitle">Foto einsetzen</h2></div>
+      <p class="intro">Foto oder Screenshot kopieren. CodeSnap liest <strong>nur den sechsstelligen Code</strong> – ohne Bildvorschau.</p>
+      <button id="pasteBtn" class="paste-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="13" height="16" rx="2"/><path d="M9 5V3h7v2M9 11h7M9 15h7"/></svg><span>Foto einsetzen</span></button>
+      <div id="pasteFallback" class="paste-fallback" hidden>
+        <p><strong>iPhone:</strong> Im Feld lange drücken und <strong>„Einsetzen“</strong> auswählen.</p>
+        <div id="pasteTarget" class="paste-target" contenteditable="true" role="textbox" aria-label="Foto aus der Zwischenablage einsetzen" data-placeholder="Hier lange drücken → Einsetzen"></div>
+        <p class="desktop-help">Mac/PC: <strong>⌘V</strong> oder <strong>Strg+V</strong>.</p>
+      </div>
+      <div id="progress" class="progress" hidden role="status" aria-live="polite"><div class="progress-head"><span id="progressLabel">Erkennung wird gestartet …</span><span id="progressPercent">0 %</span></div><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div></div>
+      <p id="status" class="status" role="status" aria-live="polite">Bereit für dein kopiertes Foto.</p>
+    </section>
+    <footer>Texterkennung direkt auf deinem Gerät · Kein Upload</footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
